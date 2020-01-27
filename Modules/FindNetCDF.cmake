@@ -1,27 +1,4 @@
-#  Copyright https://github.com/jedbrown/cmake-modules (git shortlog -s)
-#  All rights reserved.
-
-#  Redistribution and use in source and binary forms, with or without modification,
-#  are permitted provided that the following conditions are met:
-
-#  * Redistributions of source code must retain the above copyright notice, this
-#    list of conditions and the following disclaimer.
-
-#  * Redistributions in binary form must reproduce the above copyright notice, this
-#    list of conditions and the following disclaimer in the documentation and/or
-#    other materials provided with the distribution.
-
-#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-#  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-#  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-#  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-#  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-#  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-#  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-#  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+  
 # - Find NetCDF
 # Find the native NetCDF includes and library
 #
@@ -49,102 +26,64 @@
 #  target_link_libraries (uses_f90_interface ${NETCDF_LIBRARIES})
 #  target_link_libraries (only_uses_c_interface ${NETCDF_LIBRARIES_C})
 
-if(DEFINED NETCDF)
-  set(NETCDF_DIR ${NETCDF})
-endif()
-
-if(DEFINED ENV{NETCDF})
-  set(NETCDF_DIR $ENV{NETCDF})
-endif()
 
 if (NETCDF_INCLUDES AND NETCDF_LIBRARIES)
   # Already in cache, be silent
   set (NETCDF_FIND_QUIETLY TRUE)
 endif (NETCDF_INCLUDES AND NETCDF_LIBRARIES)
 
-if(DEFINED ENV{NETCDF4}) 
-  set(NETCDF_DIR $ENV{NETCDF4})
-elseif(DEFINED ENV{NETCDF_DIR})
-  set(NETCDF_DIR $ENV{NETCDF_DIR})
-elseif(DEFINED ENV{NETCDF_HOME})
-  set(NETCDF_DIR $ENV{NETCDF_HOME})
-elseif( DEFINED ENV{NETCDF} )
-  set(NETCDF_DIR $ENV{NETCDF})
-elseif(DEFINED ENV{SSEC_NETCDF4_DIR})
-  set(NETCDF_DIR $ENV{SSEC_NETCDF4_DIR})
-elseif(DEFINED ENV{SSEC_NETCDF_DIR})
-  set(NETCDF_DIR $ENV{SSEC_NETCDF_DIR})
-endif()
-if(DEFINED ENV{NETCDF_FORTRAN}) 
-  set(NETCDF_FORTRAN $ENV{NETCDF_FORTRAN})
-elseif(DEFINED ENV{NETCDF_FORTRAN_DIR}) 
-  set(NETCDF_FORTRAN $ENV{NETCDF_FORTRAN_DIR})
-endif()
 find_path (NETCDF_INCLUDES netcdf.h
-  HINTS ${NETCDF_DIR}/include $ENV{SSEC_NETCDF_DIR}/include )
+  HINTS ${NETCDF}/include ${NETCDF_DIR}/include $ENV{NETCDF}/include $ENV{NETCDF_DIR} )
 
-find_program (NETCDF_META netcdf_meta.h
-    HINTS ${NETCDF_INCLUDES} ${CMAKE_INSTALL_PREFIX}
-    )
-if (NETCDF_META)
-  file (STRINGS ${NETCDF_META} NETCDF_VERSION REGEX "define NC_VERSION_MAJOR")
-  string (REGEX REPLACE "#define NC_VERSION_MAJOR " "" NETCDF_VERSION ${NETCDF_VERSION})
-  string (REGEX REPLACE "\\/\\*\\!< netcdf-c major version. \\*\\/" "" NETCDF_VERSION ${NETCDF_VERSION})
-  string (REGEX REPLACE " " "" NETCDF_VERSION ${NETCDF_VERSION} )
-  if(${NETCDF_VERSION} GREATER "3")
-    set(NETCDF_F90 "YES")
-  endif()
-endif (NETCDF_META)
-
-find_library (NETCDF_flib 
-     names libnetcdff.a netcdff.a libnetcdff.so netcdff.so 
-     HINTS 
-        ${NETCDF_DIR}/lib
-        ${NETCDF_FORTRAN_DIR}/lib
-        ${NETCDF_FORTRAN}/lib
-        ${NETCDF_FORTRAN_ROOT}/lib
-)
-
-if (NETCDF_flib)
-    set(NETCDF_F90 "YES")
-    
+if(DEFINED ENV{NETCDF_FORTRAN})
+  set(NETCDF_FORTRAN $ENV{NETCDF_FORTRAN})
+elseif(DEFINED ENV{NETCDF_F90})
+  set(NETCDF_FORTRAN $ENV{NETCDF_F90})
+elseif(DEFINED ${NETCDF_F90})
+  set(NETCDF_FORTRAN ${NETCDF_F90})
+elseif(DEFINED ${NETCDF_FORTRAN})
+  set(NETCDF_FORTRAN ${NETCDF_FORTRAN})
+elseif(DEFINED ${NETCDF})
+  set(NETCDF_FORTRAN ${NETCDF})
+elseif(DEFINED ENV{NETCDF})
+  set(NETCDF_FORTRAN $ENV{NETCDF})
 endif()
-find_library (NETCDF_LIBRARIES_C       
-    NAMES netcdf
-    HINTS ${NETCDF_DIR}/lib )
+find_path (NETCDF_INCLUDES_FORTRAN netcdf.inc
+  HINTS 
+   ${NETCDF_FORTRAN}/include 
+   ${NETCDF_FORTRAN}/mod )
+message("fortran incs are ${NETCDF_INCLUDES_FORTRAN}")
+message("netcdf_fortran is ${NETCDF_FORTRAN}")
+
+
+find_library (NETCDF_LIBRARIES_C NAMES libnetcdf.so libnetcdf.a libnetcdf.dylib 
+   HINTS 
+     ${NETCDF}/lib 
+     ${NETCDF_DIR}/lib
+     ${NETCDF}/lib64 
+     ${NETCDF_DIR}/lib64
+     $ENV{NETCDF}/lib
+     $ENV{NETCDF_DIR}/lib 
+     $ENV{NETCDF}/lib64
+     $ENV{NETCDF_DIR}/lib64 )
+message("NETCDFLIBS_C are ${NETCDF_LIBRARIES_C}")
 mark_as_advanced(NETCDF_LIBRARIES_C)
 
-if("${NETCDF_DIR}" STREQUAL "")
-  message(FATAL_ERROR "
-         Cannot find NETCDF!!!!
-         ")
-endif()
-find_file (NETCDF_NCDUMP
-    NAMES ncdump
-    HINTS ${NETCDF_DIR}/bin )
-mark_as_advanced(NETCDF_NCDUMP)
-execute_process(COMMAND ${NETCDF_NCDUMP} 
-  ERROR_VARIABLE  NCDUMP_INFO)
-string(FIND "${NCDUMP_INFO}" "version" VERSION_LOC REVERSE)
-math(EXPR VERSION_LOC "${VERSION_LOC} + 9")
-string(SUBSTRING "${NCDUMP_INFO}" ${VERSION_LOC} 1  NETCDF_MAJOR_VERSION)
-if ("${NETCDF_MAJOR_VERSION}" LESS 4)
-  message(FATAL_ERROR "
-         Current NETCDF is ${NETCDF_DIR} 
-         !!!! NETCDF version 4.0 and above is required !!!!
-         ")
-endif()
-
 set (NetCDF_has_interfaces "YES") # will be set to NO if we're missing any interfaces
-set (NetCDF_libs  ${NETCDF_LIBRARIES_C} ${NETCDF_LIBRARIES_Fortran})
+set (NetCDF_libs "${NETCDF_LIBRARIES_C}")
+
 get_filename_component (NetCDF_lib_dirs "${NETCDF_LIBRARIES_C}" PATH)
+message("lib dirs is ${NetCDF_lib_dirs}")
+
 
 macro (NetCDF_check_interface lang header libs)
   if (NETCDF_${lang})
+    message("looking for ${lang} with name ${libs} in ${NetCDF_lib_dirs} ; ${NETCDF_FORTRAN}/lib ; ${NETCDF_FORTRAN}/lib64")
     find_path (NETCDF_INCLUDES_${lang} NAMES ${header}
-      HINTS ${NETCDF_INCLUDES} ${NETCDF_FORTRAN}/include  NO_DEFAULT_PATH)
+      HINTS ${NETCDF_INCLUDES} ${NETCDF_INCLUDES_FORTRAN} NO_DEFAULT_PATH)
     find_library (NETCDF_LIBRARIES_${lang} NAMES ${libs}
-      HINTS ${NetCDF_lib_dirs} ${NETCDF_FORTRAN}/lib NO_DEFAULT_PATH)
+      HINTS ${NetCDF_lib_dirs} ${NETCDF_FORTRAN}/lib ${NETCDF_FORTRAN}/lib64 NO_DEFAULT_PATH)
+    message("${NETCDF_INCLUDES_F90} and ${NETCDF_LIBRARIES_F90}")
     mark_as_advanced (NETCDF_INCLUDES_${lang} NETCDF_LIBRARIES_${lang})
     if (NETCDF_INCLUDES_${lang} AND NETCDF_LIBRARIES_${lang})
       list (INSERT NetCDF_libs 0 ${NETCDF_LIBRARIES_${lang}}) # prepend so that -lnetcdf is last
@@ -155,17 +94,14 @@ macro (NetCDF_check_interface lang header libs)
   endif (NETCDF_${lang})
 endmacro (NetCDF_check_interface)
 
-set(NETCDF_F90 true)
-set(NETCDF_F77 true)
-
 NetCDF_check_interface (CXX netcdfcpp.h netcdf_c++)
 NetCDF_check_interface (F77 netcdf.inc  netcdff)
 NetCDF_check_interface (F90 netcdf.mod  netcdff)
-if( NETCDF_LIBRARIES_F90 )
-  set( NETCDF4 "YES" )
-endif()
 
 set (NETCDF_LIBRARIES "${NetCDF_libs}" CACHE STRING "All NetCDF libraries required for interface level")
+if(NOT (${NETCDF_INCLUDES_FORTRAN} STREQUAL "netcdf.inc-NOTFOUND"))
+  set (NETCDF_INCLUDES "${NETCDF_INCLUDES};${NETCDF_INCLUDES_FORTRAN}")
+endif()
 # handle the QUIETLY and REQUIRED arguments and set NETCDF_FOUND to TRUE if
 # all listed variables are TRUE
 include (FindPackageHandleStandardArgs)
