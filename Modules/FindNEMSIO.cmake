@@ -11,8 +11,9 @@ if(DEFINED ENV{NEMSIO_LIB} )
   set(version ${CMAKE_MATCH_1})
 
   set(versioned_lib_name ${name}_${version})
-
-  get_filename_component(lib_dir ${${uppercase_name}_LIB$} DIRECTORY)
+  set(tmpvar ${${uppercase_name}_LIB${kind}})
+  message("lib dir is ${tmpvar} ")
+  get_filename_component(lib_dir ${tmpvar} DIRECTORY)
   find_library(lib_path NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
   
   add_library(${name} STATIC IMPORTED)

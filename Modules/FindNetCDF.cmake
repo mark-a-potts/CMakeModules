@@ -51,6 +51,8 @@ endif()
 find_path (NETCDF_INCLUDES_FORTRAN netcdf.inc
   HINTS 
    ${NETCDF_FORTRAN}/include 
+   ${EXTERNAL_LIBS_DIR}/include
+   ${EXTERNAL_LIBS_DIR}/mod
    ${NETCDF_FORTRAN}/mod )
 message("fortran incs are ${NETCDF_INCLUDES_FORTRAN}")
 message("netcdf_fortran is ${NETCDF_FORTRAN}")
@@ -58,6 +60,8 @@ message("netcdf_fortran is ${NETCDF_FORTRAN}")
 
 find_library (NETCDF_LIBRARIES_C NAMES libnetcdf.so libnetcdf.a libnetcdf.dylib 
    HINTS 
+     ${EXTERNAL_LIBS_DIR}/lib 
+     ${EXTERNAL_LIBS_DIR}/lib64
      ${NETCDF}/lib 
      ${NETCDF_DIR}/lib
      ${NETCDF}/lib64 
