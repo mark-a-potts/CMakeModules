@@ -15,7 +15,7 @@ if(DEFINED ENV{BUFR_LIB4} )
   set(kinds "4" "8" "d")
   foreach(kind ${kinds})
     set(lib_name ${name}_${kind})
-    set(versioned_lib_name ${name}_${version}_${kind})
+    set(versioned_lib_name ${name}_${version}_${kind}_64)
 
     if(EXISTS ${${uppercase_name}_LIB${kind}} )
       get_filename_component(lib_dir ${${uppercase_name}_LIB${kind}} DIRECTORY)

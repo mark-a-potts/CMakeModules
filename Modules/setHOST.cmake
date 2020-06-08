@@ -15,7 +15,7 @@ macro( setHOST )
   if( NOT HOST-WCOSS ) # don't overwrite if we are on gyre
     string(REGEX MATCH "t[0-9][0-9]a" HOST-WCOSS ${HOSTNAME}  )
   endif()
-  string(REGEX MATCH "v[0-9][0-9]a" HOST-WCOSS_D ${HOSTNAME}  )
+  string(REGEX MATCH "v[0-9][0-9]*a" HOST-WCOSS_D ${HOSTNAME}  )
   if( NOT HOST-WCOSS_D )# don't overwrite if we are on venus
     string(REGEX MATCH "m[0-9][0-9]a" HOST-WCOSS_D ${HOSTNAME}  )
   endif()
