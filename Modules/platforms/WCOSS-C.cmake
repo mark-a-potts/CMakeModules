@@ -7,7 +7,7 @@ macro (setWCOSS_C)
 
   set(HOST_FLAG "-xHOST" CACHE INTERNAL "Host Flag")
   set(MKL_FLAG "" CACHE INTERNAL "MKL flag" )
-  set(GSI_Intel_Platform_FLAGS "-DPOUND_FOR_STRINGIFY -fp-model strict -assume byterecl -convert big_endian -implicitnone -D_REAL8_ ${OpenMP_Fortran_FLAGS} ${MPI_Fortran_COMPILE_FLAGS} -O3" CACHE INTERNAL "")
+  set(GSI_Platform_FLAGS "-DPOUND_FOR_STRINGIFY -fp-model strict -assume byterecl -convert big_endian -implicitnone -D_REAL8_ ${OpenMP_Fortran_FLAGS} ${MPI_Fortran_COMPILE_FLAGS} -O3" CACHE INTERNAL "")
   set(ENKF_Platform_FLAGS "-O3 -fp-model strict -convert big_endian -assume byterecl -implicitnone  -DGFS -D_REAL8_ ${OpenMP_Fortran_FLAGS} " CACHE INTERNAL "")
   set(GSI_LDFLAGS "${OpenMP_Fortran_FLAGS}" CACHE INTERNAL "")
   if( NOT DEFINED ENV{COREPATH} )
