@@ -12,10 +12,11 @@ if(DEFINED ENV{G2TMPL_LIB} )
 
   set(lib_name ${name})
   set(versioned_lib_name ${name}_${version})
+  set(versioned_lib_name_64 ${name}_${version}_${kind}_64)
 
   if(EXISTS ${${uppercase_name}_LIB} )
     get_filename_component(lib_dir ${${uppercase_name}_LIB} DIRECTORY)
-    find_library(g2tmpl_path NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+    find_library(g2tmpl_path NAMES ${versioned_lib_name_64} ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
 
     add_library(${lib_name} STATIC IMPORTED)
     set_target_properties(${lib_name} PROPERTIES

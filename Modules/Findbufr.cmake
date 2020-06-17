@@ -15,11 +15,13 @@ if(DEFINED ENV{BUFR_LIB4} )
   set(kinds "4" "8" "d")
   foreach(kind ${kinds})
     set(lib_name ${name}_${kind})
-    set(versioned_lib_name ${name}_${version}_${kind}_64)
+    message("working on ${lib_name}")
+    set(versioned_lib_name_64 ${name}_${version}_${kind}_64)
+    set(versioned_lib_name ${name}_${version}_${kind})
 
     if(EXISTS ${${uppercase_name}_LIB${kind}} )
       get_filename_component(lib_dir ${${uppercase_name}_LIB${kind}} DIRECTORY)
-      find_library(bufr_path_${kind} NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+      find_library(bufr_path_${kind} NAMES ${versioned_lib_name_64} ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
     
       add_library(${lib_name} STATIC IMPORTED)
       set_target_properties(${lib_name} PROPERTIES
@@ -28,6 +30,7 @@ if(DEFINED ENV{BUFR_LIB4} )
   endforeach()
   
 endif()
+message("BBBBBBBBBBBB didnt find bufr var")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(bufr

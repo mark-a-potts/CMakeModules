@@ -19,15 +19,17 @@ if(DEFINED ENV{IP_LIBd} )
   foreach(kind ${kinds})
     set(lib_name ${name}_${kind})
     set(versioned_lib_name ${name}_${version}_${kind})
+    set(versioned_lib_name_64 ${name}_${version}_${kind}_64)
 
+    message("in IP working on ${lib_name}")
     if(EXISTS ${${uppercase_name}_LIB${kind}} )
       get_filename_component(lib_dir ${${uppercase_name}_LIB${kind}} DIRECTORY)
-      find_library(ip_path_${kind} NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+      find_library(ip_path_${kind} NAMES ${versioned_lib_name_64} ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+      message("ip path kind is ${ip_path_${kind}}")
     
       add_library(${lib_name} STATIC IMPORTED)
       set_target_properties(${lib_name} PROPERTIES
-        IMPORTED_LOCATION ${ip_path_${kind}}
-        INTERFACE_INCLUDE_DIRECTORIES ${${uppercase_name}_INC${kind}})
+        IMPORTED_LOCATION ${ip_path_${kind}})
     endif()
   endforeach()
 endif()

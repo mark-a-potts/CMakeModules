@@ -15,11 +15,12 @@ if(DEFINED ENV{G2_LIBd})
   set(kinds "4" "d")
   foreach(kind ${kinds})
     set(lib_name ${name}_${kind})
+    set(versioned_lib_name_64 ${name}_${version}_${kind}_64)
     set(versioned_lib_name ${name}_${version}_${kind})
 
     if(EXISTS ${${uppercase_name}_LIB${kind}} )
       get_filename_component(lib_dir ${${uppercase_name}_LIB${kind}} DIRECTORY)
-      find_library(g2_path_${kind} NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+      find_library(g2_path_${kind} NAMES ${versioned_lib_name_64} ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
     
       add_library(${lib_name} STATIC IMPORTED)
       set_target_properties(${lib_name} PROPERTIES

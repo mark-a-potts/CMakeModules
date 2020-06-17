@@ -11,10 +11,11 @@ if(DEFINED ENV{NEMSIOGFS_LIB} )
   set(version ${CMAKE_MATCH_1})
 
   set(versioned_lib_name ${name}_${version})
+  set(versioned_lib_name_64 ${name}_${version}_${kind}_64)
 
   if(EXISTS ${${uppercase_name}_LIB${kind}} )
   get_filename_component(lib_dir ${${uppercase_name}_LIB$} DIRECTORY)
-    find_library(nemsiogfs_path NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+    find_library(nemsiogfs_path NAMES ${versioned_lib_name_64} ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
   
     add_library(${name} STATIC IMPORTED)
     set_target_properties(${name} PROPERTIES

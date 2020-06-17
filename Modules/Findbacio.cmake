@@ -14,11 +14,12 @@ if(DEFINED ENV{BACIO_LIB4})
   set(kinds "4" "8" "d")
   foreach(kind ${kinds})
     set(lib_name ${name}_${kind})
+    set(versioned_lib_name_64 ${name}_${version}_${kind}_64)
     set(versioned_lib_name ${name}_${version}_${kind})
 
     if(EXISTS ${${uppercase_name}_LIB${kind}} )
       get_filename_component(lib_dir ${${uppercase_name}_LIB${kind}} DIRECTORY)
-      find_library(bacio_path_${kind} NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
+      find_library(bacio_path_${kind} NAMES ${versioned_lib_name_64} ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
       add_library(${lib_name} STATIC IMPORTED)
       set_target_properties(${lib_name} PROPERTIES
         IMPORTED_LOCATION ${bacio_path_${kind}})
