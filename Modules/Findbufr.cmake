@@ -30,7 +30,6 @@ if(DEFINED ENV{BUFR_LIB4} )
   endforeach()
   
 endif()
-message("BBBBBBBBBBBB didnt find bufr var")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(bufr
