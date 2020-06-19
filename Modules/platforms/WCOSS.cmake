@@ -6,8 +6,8 @@ macro (setWCOSS)
 
   #if ibmpe module is not loaded last, CMake tries to use intel mpi. Force use of ibmhpc
   set(HOST_FLAG "${XHOST}" CACHE INTERNAL "Host Flag")
-  set(GSI_Platform_FLAGS "-DPOUND_FOR_STRINGIFY ${TRACEBACK} ${FOPT3} ${FP_MODEL_SOURCE} ${BIG_ENDIAN} ${BYTERECLEN} ${IMPLICITNONE} -D_REAL8_ ${OpenMP_Fortran_FLAGS} ${MPI_Fortran_COMPILE_FLAGS}" CACHE INTERNAL "")
-  set(ENKF_Platform_FLAGS "${FOPT3} ${FP_MODEL_SOURCE} ${BIG_ENDIAN} ${BYTERECLEN} ${IMPLICITNONE}  -DGFS -D_REAL8_ ${OpenMP_Fortran_FLAGS} ${HOST_FLAG} " CACHE INTERNAL "")
+  set(GSI_Fortran_FLAGS "-DPOUND_FOR_STRINGIFY ${TRACEBACK} ${FOPT3} ${FP_MODEL_SOURCE} ${BIG_ENDIAN} ${BYTERECLEN} ${IMPLICITNONE} -D_REAL8_ ${OpenMP_Fortran_FLAGS} ${MPI_Fortran_COMPILE_FLAGS}" CACHE INTERNAL "")
+  set(ENKF_Fortran_FLAGS "${FOPT3} ${FP_MODEL_SOURCE} ${BIG_ENDIAN} ${BYTERECLEN} ${IMPLICITNONE}  -DGFS -D_REAL8_ ${OpenMP_Fortran_FLAGS} ${HOST_FLAG} " CACHE INTERNAL "")
 
   set(MPI_Fortran_COMPILER /opt/ibmhpc/pe13010/base/bin/mpif90 CACHE FILEPATH "Forced use of ibm wrapper" FORCE )
   set(MPI_C_COMPILER /opt/ibmhpc/pe13010/base/bin/mpicc CACHE FILEPATH "Forced use of ibm wrapper" FORCE )

@@ -1,4 +1,3 @@
-set(intsize 4)
 function(set_LIBRARY_UTIL)
     set(WRFLIB_Fortran_FLAGS "-DPOUND_FOR_STRINGIFY ${FOPT3} ${FP_MODEL_SOURCE} ${BYTERECLEN} ${BIG_ENDIAN} ${DEBINFO} ${TRACEBACK} -D_REAL8_ ${MPI_Fortran_COMPILE_FLAGS}" CACHE INTERNAL "")
     set(WRFLIB_C_FLAGS "-I. -DFortranByte=char -DFortranInt=int -DFortranLlong='long long'  ${FOPT3}  -Dfunder" CACHE INTERNAL "" )
