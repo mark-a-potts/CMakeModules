@@ -175,7 +175,7 @@ endfunction()
 set( NetCDF_LIBRARIES )
 foreach( _comp IN LISTS _search_components )
   string( TOUPPER "${_comp}" _COMP )
-  message("looking for NetCDF_${_comp}_LIBRARY")
+
   find_library( NetCDF_${_comp}_LIBRARY
     NAMES ${NetCDF_${_comp}_LIBRARY_NAME}
     DOC "NetCDF ${_comp} library"
